@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<style>
+  /* Show the first question by default */
+  #question1 {
+    display: block;
+  }
+
+  /* Hide all other questions by default */
+  .question:not(#question1) {
+    display: none;
+  }
+</style>
+</head>
+<body>
+<form action="{% url 'TPG:results' %}" method="POST">
+  {% csrf_token %}
+
+  <!-- Question 1 -->
+  <div class="question" id="question1">
+    <h2>Question 1:</h2>
+    <p>{{ question1 }}</p>
+    <input type="text" name="answer1" required>
+    <button type="button" onclick="showQuestion('question2', 'question1')">Next</button>
+  </div>
+
+  <!-- Question 2 -->
+  <div class="question" id="question2">
+    <h2>Question 2:</h2>
+    <p>{{ question2 }}</p>
+    <input type="text" name="answer2" required>
+    <!-- <select name="answer2">
+      {% for option in options %}
+        <option value="{{ option }}">{{ option }}</option>
+      {% endfor %}
+    </select> -->
+    <button type="button" onclick="showQuestion('question3', 'question2', 'question1')">Next</button>
+    <button type="button" onclick="hideQuestion('question1')">Back</button>
+  </div>
+
+  <!-- Question 3 -->
+  <div class="question" id="question3">
+    <h2>Question 3:</h2>
+    <p>{{ question3 }}</p>
+    <input type="number" name="answer3" min="0" max="99">
+    <button type="submit">Submit</button>
+    <button type="button" onclick="hideQuestion('question2')">Back</button>
+  </div>
+
+</form>
+
+<script>
+  // Function to show a question
+  function showQuestion(nextQuestionId, currentQuestionId, prevQuestionId) {
+    // Hide the current question
+    document.getElementById(currentQuestionId).style.display = "none";
+    
+    // Show the next question
+    document.getElementById(nextQuestionId).style.display = "block";
+    
+    // Hide the previous question
+    if (prevQuestionId) {
+      document.getElementById(prevQuestionId).style.display = "none";
+    }
+  }
+
+  // Function to hide a question
+  function hideQuestion(questionId) {
+    document.getElementById(questionId).style.display = "none";
+  }
+</script>
+
+
+<!-- <form action="#" method="POST">
+  {% csrf_token %}
+  <h2>Question 1:</h2>
+  <p>{{ question1 }}</p>
+  <input type="text" name="answer1">
+
+  <h2>Question 2:</h2>
+  <p>{{ question2 }}</p>
+  <input type="text" name="answer2">
+  <select name="answer2">
+    {% for option in options %}
+      <option value="{{ option }}">{{ option }}</option>
+    {% endfor %}
+  </select>
+
+  <h2>Question 3:</h2>
+  <p>{{ question3 }}</p>
+  <input type="number" name="answer3" min="0" max="99">
+
+  <input type="submit" value="Submit">
+</form> -->
+{% endblock %}
+
+
